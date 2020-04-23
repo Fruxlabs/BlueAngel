@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CashCat")]
-[assembly: AssemblyDescription("A Simulator for File Activity")]
+[assembly: AssemblyTitle("BlueAngel")]
+[assembly: AssemblyDescription("A Ransomware Simulator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Berg Studios")]
-[assembly: AssemblyProduct("CashCat")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("FruxLabs")]
+[assembly: AssemblyProduct("BlueAngel")]
+[assembly: AssemblyCopyright("Fruxlabs")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
