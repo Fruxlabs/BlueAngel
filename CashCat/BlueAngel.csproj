@@ -148,9 +148,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="cashcat.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="font-awesome_4-7-0_lock_100_0_ffffff_none.png" />
   </ItemGroup>
   <ItemGroup>
