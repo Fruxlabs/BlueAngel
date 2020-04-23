@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NETCore.Encrypt;
 using System.IO;
 
-namespace CashCat
+namespace BlueAngel
 {
     class EncryptionOperation
     {

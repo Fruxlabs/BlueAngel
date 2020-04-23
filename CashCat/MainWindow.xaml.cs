@@ -18,7 +18,7 @@ using RestSharp;
 using System.Threading;
 using System.Windows.Threading;
 
-namespace CashCat
+namespace BlueAngel
 {
 
     /// <summary>

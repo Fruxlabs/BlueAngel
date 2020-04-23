@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashCat
+namespace BlueAngel
 {
     public class FileSystemOperation
     {

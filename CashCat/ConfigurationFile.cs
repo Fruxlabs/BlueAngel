@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashCat
+namespace BlueAngel
 {
     public partial class ConfigurationFile
     {
