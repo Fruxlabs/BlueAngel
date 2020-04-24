@@ -113,6 +113,8 @@ namespace BlueAngel
             return inheritedAllow && !inheritedDeny;
         }
     }
+
+    //Adding base file ops
     public class FileSystemOperation
     {
         /// <summary>
